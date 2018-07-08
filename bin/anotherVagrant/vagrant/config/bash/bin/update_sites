@@ -1,0 +1,9 @@
+#!/bin/bash
+sudo unlink /etc/httpd/sites-enabled/*.conf
+sudo unlink /etc/httpd/sites-available/*.conf
+
+sudo cp -rf /vagrant/config/httpd/sites-available/* /etc/httpd/sites-available/
+cd /etc/httpd/sites-enabled;
+sudo ln -s ../sites-available/*.conf
+
+sudo service httpd restart

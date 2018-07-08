@@ -1,0 +1,2 @@
+#!/bin/bash
+sudo /bin/cp -f /vagrant/config/php/php.ini /etc/php.ini

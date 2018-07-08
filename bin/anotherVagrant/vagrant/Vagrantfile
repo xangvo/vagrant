@@ -1,0 +1,35 @@
+require 'getoptlong'
+
+opts = GetoptLong.new(
+  [ '--vbox-version', GetoptLong::OPTIONAL_ARGUMENT ],
+  [ '--provision', GetoptLong::OPTIONAL_ARGUMENT ],
+  [ '--no-provision', GetoptLong::OPTIONAL_ARGUMENT ]
+)
+
+vboxVersion=''
+
+opts.each do |opt, arg|
+  case opt
+    when '--vbox-version'
+      vboxVersion=arg
+  end
+end
+
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "hansode/centos-5.5-i386"
+  config.vm.box_url = "hansode/centos-5.5-i386"
+
+  config.vm.network "private_network", ip: "192.168.8.12"
+  config.vm.network :forwarded_port, guest: 22, host: 22014, id: "ssh"
+
+  config.vm.synced_folder "../ttv_source/src/pleiades/xampp/htdocs", "/data/token", create: true, owner: 'vagrant', group: 'vagrant', mount_options: ['dmode=777,fmode=776']
+
+  config.vm.provider :virtualbox do |vb|
+    vb.name = "token"
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "off"]
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "off"]
+  end
+
+  config.vm.provision :shell, :path => "provision.sh", :args => "#{vboxVersion}"
+end

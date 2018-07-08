@@ -1,0 +1,9 @@
+# .bash_profile
+export PS1='\[\e[0;31m\][\u\[\e[0;32m\]@\h \[\e[0;36m\]\W]\$\[\e[0m\] '
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+. ~/.bashrc
+fi
+
+# User specific environment and startup programs

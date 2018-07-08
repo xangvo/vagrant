@@ -1,0 +1,27 @@
+#!/bin/bash
+function add_hosts_file () {
+  export IFS=$PRI_IFS
+
+  local line=$1
+  if [ "x${line:0:1}" = 'x#' ]; then
+    return
+  fi
+
+  local lc_dm=`echo ${line} | cut -d ' ' -f 2`
+  cat /etc/hosts | grep " ${lc_dm}"'$' > /dev/null
+  if [ $? -ne 0 ]; then
+    echo "${1}" | sudo tee -a /etc/hosts > /dev/null
+  else
+    sudo sed -i "/${lc_dm}/c"'\'"${line}" /etc/hosts
+  fi
+  export IFS=$'\n'
+}
+
+PRI_IFS=$IFS
+export IFS=$'\n'
+
+while read line; do
+  add_hosts_file "${line}"
+done < /vagrant/config/bash/hosts
+
+export IFS=$PRI_IFS

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+while [ ! x$1 = x ]; do
+  php -m | grep $1 > /dev/null
+  if [ $? -ne 0 ]; then
+    sudo yum -y install "php53-${1}"
+  fi
+  shift
+done
